@@ -1,0 +1,17 @@
+Route::post('/login', 'AuthController@login')
+    ->middleware('throttle:5,1');
+
+Route::post('/login', [Auth::class, 'login'])->middleware('throttle:5,1');
+Route::post('/register', [Auth::class, 'register'])->middleware('throttle:10,1');
+Route::get('/products', [Product::class, 'index'])->middleware('throttle:60,1');
+
+Route::prefix('user')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('login', [UserController::class, 'login'])->middleware('throttle:5,1');
+        Route::post('login_mobile', [UserController::class, 'login_mobile'])->middleware('throttle:5,1');
+        Route::post('register', [UserController::class, 'register'])->middleware('throttle:5,1'); 
+        Route::post('send-otp', [UserController::class, 'sendOtp'])->middleware('throttle:5,1'); 
+        Route::post('verify-otp', [UserController::class, 'verifyOtp'])->middleware('throttle:5,1');
+        Route::post('create-account', [UserController::class, 'createAccount'])->middleware('throttle:5,1');
+    });
+});
